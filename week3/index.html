@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Grades</title>
+</head>
+<body>
+    <h1>Student Grades</h1>
+    <div id="student-data"></div>
+    <div id="statistics"></div>
+
+    <script>
+        var grades = "jim|25, sue|32, mary|34, ann|22, ted|28, frank|15, lisa|19, mike|30, ahn|26, vishaya|27";
+        var studentArray = grades.split(", ");
+
+        var totalStudents = studentArray.length;
+        var lowestScore = Infinity;
+        var highestScore = -Infinity;
+        var sumScores = 0;
+
+        var formattedData = "";
+        var sortedStudents = studentArray.sort(function (a, b) {
+            var nameA = a.split("|")[0].toUpperCase();
+            var nameB = b.split("|")[0].toUpperCase();
+            if (nameA < nameB) {
+                return -1;
+            }
+            if (nameA > nameB) {
+                return 1;
+            }
+            return 0;
+        });
+
+         // Iterate through sorted students and build formattedData string
+        sortedStudents.forEach(function (student) {
+            var nameAndScore = student.split("|");
+            var name = nameAndScore[0].charAt(0).toUpperCase() + nameAndScore[0].slice(1);
+            var score = parseInt(nameAndScore[1]);
+
+            formattedData += name + " - " + score + "<br>";
+
+            // Track lowest, highest, and sum of scores
+            lowestScore = Math.min(lowestScore, score);
+            highestScore = Math.max(highestScore, score);
+            sumScores += score;
+        });
+
+        var averageScore = sumScores / totalStudents;
+
+        // Display formatted student data
+        document.getElementById("student-data").innerHTML = formattedData;
+        // Display statistics
+        document.getElementById("statistics").innerHTML = "Total students: " + totalStudents + "<br>" +
+            "Lowest score: " + lowestScore + "<br>" +
+            "Highest score: " + highestScore + "<br>" +
+            "Average score: " + averageScore.toFixed(2);
+    </script>
+</body>
+</html>
