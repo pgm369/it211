@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        .over {
+            background-color: orange;
+        }
+        .selected {
+            background-color: green;
+        }
+        /* Add alternating row colors */
+        .character-row:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        /* Add alternating row colors for filtered rows */
+        .character-row.filtered:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="buttons"></div>
+    <table border='1'>
+        <tr>
+            <th>name</th>
+            <th>role</th>
+            <th>house</th>
+            <th>gender</th>
+            <th>alignment</th>
+        </tr>
+    </table>
+    <button>reset</button>
+        
+    <script>
+        var characters = [
+        {name:"Albus Dumbledore", role:"staff", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Nymphadora Tonks", role:"", house:"Hufflepuff",gender:"f",alignment:"good"},    
+        {name:"Ron Weasley", role:"student", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Ginny Weasley", role:"student", house:"Gryffindor",gender:"f",alignment:"good"},    
+        {name:"Hermione Granger", role:"student", house:"Gryffindor",gender:"f",alignment:"good"},    
+        {name:"Mad-eye Moody", role:"staff", house:"",gender:"m",alignment:"good"},    
+        {name:"Prof McGonagall", role:"staff", house:"Gryffindor",gender:"f",alignment:"good"},    
+        {name:"Harry Potter", role:"student", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Draco Malfoy", role:"student", house:"Slytherin",gender:"m",alignment:"evil"},    
+        {name:"Hagrid", role:"staff", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Luna Lovegood", role:"student", house:"Ravenclaw",gender:"f",alignment:"good"},    
+        {name:"Voldemort", role:"", house:"Slytherin",gender:"m",alignment:"evil"},    
+        {name:"Bellatrix Lestrange", role:"", house:"Slytherin",gender:"f",alignment:"evil"},           
+        {name:"Severus Snape", role:"staff", house:"Slytherin",gender:"m",alignment:"?"}
+        ];
+
+        $(document).ready(function() {
+            function generateHouseButtons() {
+                var uniqueHouses = [...new Set(characters.map(character => character.house))];
+                var buttonsHtml = uniqueHouses.map(house => `<button class="house-button" data-house="${house}">${house}</button>`).join("");
+                $('#buttons').html(buttonsHtml);
+            }
+
+            function generateCharacterRows() {
+                var tableHtml = characters.map(character => `
+                    <tr class="character-row" data-house="${character.house}">
+                        <td>${character.name}</td>
+                        <td>${character.role}</td>
+                        <td>${character.house}</td>
+                        <td>${character.gender}</td>
+                        <td>${character.alignment}</td>
+                    </tr>
+                `).join("");
+                $('table').append(tableHtml);
+            }
+
+            function filterRowsByHouse(selectedHouse) {
+                $('.character-row').hide().removeClass('filtered'); // Hide all rows and remove 'filtered' class
+                $(`.character-row[data-house="${selectedHouse}"]`).show().addClass('filtered'); // Show and add 'filtered' class to rows matching selected house
+            }
+
+            generateHouseButtons();
+            generateCharacterRows();
+
+            $('.house-button').click(function() {
+                var selectedHouse = $(this).data('house');
+                filterRowsByHouse(selectedHouse);
+            });
+
+            $('button:contains("reset")').click(function() {
+                $('.character-row').show().removeClass('filtered'); // Show all rows and remove 'filtered' class
+            });
+        });
+    </script>
+</body>
+</html>
